@@ -15,7 +15,15 @@ class RegisterController extends Controller
 	public  function store(Request $request)
     
     {
-        // dd($request->all());
+//        dd($request['postcode']);
+        $this->validate($request, [
+            'username' => 'required|unique:rm_users|max:10',
+            'email' => 'required|email|unique:rm_users',
+            'password' => 'required|min:6',
+            'firstname' => 'required',
+            'phone' => 'required|nullable',
+            'mobile' => 'required|min:11|numeric',
+        ]);
 
          User::create([
            
@@ -33,6 +41,8 @@ class RegisterController extends Controller
             
 
         ]);
+
+         session()->flash('success', 'User Created Successfuly');
 
          return redirect()->back();
 

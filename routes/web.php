@@ -13,8 +13,7 @@
 
 Route::get('/', function () {
 
-    session()->flush();
-    return view('welcome');
+    return view('auth.login');
 });
 
 
@@ -23,7 +22,8 @@ Route::middleware(['login'])->group(function (){
     Route::get('/home', 'Auth\LoginController@home')->name('home');
 });
 //Route::get('/home', 'Auth\LoginController@home')->name('home');
- Route::get('/create/user', 'RegisterController@showRegistrationForm')->name('user.register');
+
+ Route::get('/create/user', 'RegisterController@showRegistrationForm')->name('user.register')->middleware('AuthRegister');
  Route::post('/register/user', 'RegisterController@store')->name('store.register');
 
 

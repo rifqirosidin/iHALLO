@@ -17,7 +17,7 @@ class User extends Authenticatable
      */
     protected $table = 'rm_users';
 
-    public $timestamps = false;
+//    public $timestamps = false;
     protected $fillable = [
          'username', 'email', 'password',
          'firstname', 'middlename', 'lastname',

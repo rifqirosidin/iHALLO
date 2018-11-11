@@ -6,6 +6,26 @@
         @csrf
         <div class="container-register">
             <div class="bg-register">
+
+                @if ($message = Session::get('success'))
+                    <div class="alert alert-success alert-block">
+
+                        <strong>{{ $message }}</strong>
+                    </div>
+                @endif
+
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+
                 <h3 align="center" style="margin-bottom: 50px">iHALLO Register</h3>
 
                 <h5 class="py-2">Account</h5>
@@ -50,13 +70,13 @@
                 <div class="form-group row">
                     <label for="middle" class="col-sm-1 col-form-label">Middle</label>
                     <div class="col-sm-3">
-                        <input type="text" name="middle" class="form-control" id="middle" placeholder="Middle">
+                        <input type="text" name="middle" class="form-control" id="middle" placeholder="Middle" >
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="lastname" class="col-sm-1 col-form-label">Lastname</label>
                     <div class="col-sm-3">
-                        <input type="text" name="lastname" class="form-control" id="lastname" placeholder="Lastname">
+                        <input type="text" name="lastname" class="form-control" id="lastname" placeholder="Lastname" git >
                     </div>
                 </div>
 
@@ -92,7 +112,7 @@
                   <div class="form-group row">
                     <label for="telp" class="col-sm-1 col-form-label float-right">Telephone</label>
                     <div class="col-sm-3">
-                        <input type="text" name="phone" class="form-control" id="telp" placeholder="Telp">
+                        <input type="tel" name="phone" class="form-control" id="telp" placeholder="Telp">
                     </div>
                     <label for="mobile" class="col-sm-1 col-form-label" >Mobile</label>
                     <div class="col-sm-3">
