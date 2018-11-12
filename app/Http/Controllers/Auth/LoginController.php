@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -60,7 +61,27 @@ class LoginController extends Controller
             session()->put('middlename', $user->middlename);
             session()->put('lastname', $user->lastname);
 
-            return redirect('/home')->with('user', $user);
+            $quotas = DB::select('SELECT
+                        SUM(allbytesdl) - COALESCE(SUM(specbytesdl), 0) as download,
+                 SUM(allbytesul) - COALESCE(SUM(specbytesul), 0) as upload,
+                 SUM(alltime) - COALESCE(SUM(spectime), 0) as alltime
+                  FROM (
+                    SELECT LEFT(radacct.acctstarttime, 4) AS date,
+                    acctoutputoctets AS allbytesdl, SUM(dlbytes) AS specbytesdl,
+                    acctinputoctets AS allbytesul, SUM(ulbytes) AS specbytesul,
+                    radacct.acctsessiontime AS alltime, SUM(rm_radacct.acctsessiontime) AS spectime
+                    FROM radacct
+                    LEFT JOIN rm_radacct ON rm_radacct.radacctid = radacct.radacctid
+                    WHERE radacct.username = \'$user->username\' AND
+                          FramedIPAddress LIKE \'%\' AND CallingStationId LIKE \'%\'
+
+                    GROUP BY radacct.radacctid
+                    ) AS tmp
+                  GROUP BY date');
+
+//                dd($quotas);
+
+            return view('/home', compact('quotas'));
 
 //            return view('home', compact('user'));
 

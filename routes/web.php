@@ -12,6 +12,7 @@
 */
 
 Route::get('/', function () {
+//    session()->flush();
 
     return view('auth.login');
 });

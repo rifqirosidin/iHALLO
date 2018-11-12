@@ -13,8 +13,28 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    <table border="1" align="center">
+                        <th>Download</th>
+                        <th>Upload</th>
+                        <th>Alltime</th>
+                        <tr>
+                            @forelse($quotas as $quota)
+                            <td>{{ $quota->download }}  </td>
+                            <td>{{ $quota->upload }}</td>
+                            <td>{{ $quota->alltime }}</td>
 
-                    You are logged in!
+                        </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3">Tidak Ada Paket</td>
+                            </tr>
+
+                        @endforelse
+
+                    </table>
+
+
+
                 </div>
             </div>
         </div>
