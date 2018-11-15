@@ -16,10 +16,12 @@ class Login
      */
     public function handle($request, Closure $next)
     {
-        if(!Session::get('email') ?? ''){
+        if(Session::get('username') == null){
 
             return redirect()->back();
-        }
+        } else{
+            
             return $next($request);
+        }
     }
 }

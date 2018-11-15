@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Dashboard</div>
+                <div class="card-header">Quota Information</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -13,23 +13,30 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    <table border="1" align="center">
-                        <th>Download</th>
-                        <th>Upload</th>
-                        <th>Alltime</th>
-                        <tr>
-                            @forelse($quotas as $quota)
-                            <td>{{ $quota->download }}  </td>
-                            <td>{{ $quota->upload }}</td>
-                            <td>{{ $quota->alltime }}</td>
-
-                        </tr>
-                        @empty
-                            <tr>
-                                <td colspan="3">Tidak Ada Paket</td>
-                            </tr>
-
-                        @endforelse
+                    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Download</th>
+      <th scope="col">Upload</th>
+      <th scope="col">Alltime</th>
+    </tr>
+  </thead>
+  <tbody>
+    @forelse($quotas as $quota)
+    <tr>      
+      <td>{{ $quota->download }}</td>
+      <td>{{ $quota->upload }}</td>
+      <td>{{ $quota->alltime }}</td>
+     
+    </tr>
+    @empty
+    <tr>
+        <td>Empty</td>
+    </tr>
+    @endforelse
+    
+  </tbody>
+</table>
 
                     </table>
 

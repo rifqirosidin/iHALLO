@@ -23,27 +23,15 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-//    protected $redirectTo = '/home';
+    protected $redirectTo = '/home';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    protected $username;
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        $this->username = $this->findUsername();
 
-//        dd(User::first());
     }
 
+  
     public  function login(Request $request)
     {
 
@@ -53,40 +41,27 @@ class LoginController extends Controller
 
         $user = User::where(['email' => $email, 'password' => $password ])->first();
 
-
+       
+        session()->put('username', $user->username);
         if($password == $user['password'] && $email == $user['email']){
+            
 
             session()->put('email', $email);
             session()->put('firstname', $user->firstname);
             session()->put('middlename', $user->middlename);
             session()->put('lastname', $user->lastname);
+            
 
-            $quotas = DB::select('SELECT
-                        SUM(allbytesdl) - COALESCE(SUM(specbytesdl), 0) as download,
-                 SUM(allbytesul) - COALESCE(SUM(specbytesul), 0) as upload,
-                 SUM(alltime) - COALESCE(SUM(spectime), 0) as alltime
-                  FROM (
-                    SELECT LEFT(radacct.acctstarttime, 4) AS date,
-                    acctoutputoctets AS allbytesdl, SUM(dlbytes) AS specbytesdl,
-                    acctinputoctets AS allbytesul, SUM(ulbytes) AS specbytesul,
-                    radacct.acctsessiontime AS alltime, SUM(rm_radacct.acctsessiontime) AS spectime
-                    FROM radacct
-                    LEFT JOIN rm_radacct ON rm_radacct.radacctid = radacct.radacctid
-                    WHERE radacct.username = \'$user->username\' AND
-                          FramedIPAddress LIKE \'%\' AND CallingStationId LIKE \'%\'
 
-                    GROUP BY radacct.radacctid
-                    ) AS tmp
-                  GROUP BY date');
+            return redirect()->route('home');
 
-//                dd($quotas);
 
-            return view('/home', compact('quotas'));
-
-//            return view('home', compact('user'));
+            // return view('home', compact('user'));
 
 
         } else {
+
+            session()->flash('error', 'Login Failed');
 
             return redirect()->back();
         }
@@ -94,41 +69,9 @@ class LoginController extends Controller
 
     }
 
-    public  function home()
-    {
-        return view('home');
-    }
+   
 
-    protected function credentials(Request $request)
-    {
-        $field = filter_var($request->get($this->username()), FILTER_VALIDATE_EMAIL)
-            ? $this->username()
-            : 'username';
 
-        return [
-            $field => $request->get($this->username()),
-            'password' => $request->password,
-        ];
-    }
-    public function findUsername()
-    {
-        $login = request()->input('login');
 
-        $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-
-        request()->merge([$fieldType => $login]);
-
-        return $fieldType;
-    }
-
-    /**
-     * Get username property.
-     *
-     * @return string
-     */
-    public function username()
-    {
-        return $this->username;
-    }
 
 }

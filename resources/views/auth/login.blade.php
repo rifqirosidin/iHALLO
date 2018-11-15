@@ -2,7 +2,9 @@
 @section('form')
 
     <div class="container-login100">
+
         <div class="wrap-login100">
+
             <div class="login100-pic js-tilt" data-tilt>
                 <img src="{{ asset('frontend/images/img-01.png') }}" alt="IMG">
             </div>
@@ -10,10 +12,17 @@
             <form class="login100-form validate-form" action="{{ route('login') }}" method="POST">
                 @csrf
                 <span class="login100-form-title">
+                     @if ( $data = session('error'))
+                        <div class="alert alert-danger">
+                            {{ $data }}
+                        </div>
+                        
+                    @endif
 						iHALLO Login
 					</span>
 
                 <div class="wrap-input100 validate-input" >
+
                     <input class="input100" type="text" name="email" placeholder="Email" value="{{ old('email') ?: old('email') }}" required autofocus>
                     <span class="focus-input100"></span>
                     <span class="symbol-input100">

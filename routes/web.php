@@ -12,15 +12,14 @@
 */
 
 Route::get('/', function () {
-//    session()->flush();
-
-    return view('auth.login');
+	session()->flush();
+    return view('index');
 });
 
 
 Route::middleware(['login'])->group(function (){
 
-    Route::get('/home', 'Auth\LoginController@home')->name('home');
+    Route::get('/home', 'HomeController@home')->name('home');
 });
 //Route::get('/home', 'Auth\LoginController@home')->name('home');
 
@@ -28,10 +27,11 @@ Route::middleware(['login'])->group(function (){
  Route::post('/register/user', 'RegisterController@store')->name('store.register');
 
 
+
 Auth::routes();
 
-
-
+Route::get('/home','HomeController@home')->name('home');
+Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard');
 
 
 use App\User;

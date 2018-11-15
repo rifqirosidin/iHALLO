@@ -17,8 +17,10 @@ class AuthRegister
     {
         if(session()->get('email') == null){
             return $next($request);
-        }
+        }else{
+            
             return redirect()->route('home');
+        }
 
     }
 }

@@ -13,12 +13,13 @@ use Illuminate\Support\Facades\Auth;
 //use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
+use App\User;
 
 
 
 class ResetPasswordController extends Controller
 {
-//    use RedirectsUsers;
+   
     /*
      *
     |--------------------------------------------------------------------------
@@ -50,15 +51,6 @@ class ResetPasswordController extends Controller
         $this->middleware('guest');
     }
 
-
-
-
-
-    /**
-     * Get the password reset validation rules.
-     *
-     * @return array
-     */
     protected function rules()
     {
         return [
@@ -68,25 +60,27 @@ class ResetPasswordController extends Controller
         ];
     }
 
-    /**
-     * Get the password reset validation error messages.
-     *
-     * @return array
-     */
     protected function validationErrorMessages()
     {
         return [];
     }
 
-    /**
-     * Get the password reset credentials from the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
+   
     protected function credentials(Request $request)
     {
+        $password = md5($request->password);
+        $email = $request->email;
 
+
+        $user = User::where('email',$email)->first();
+
+            session()->put('email', $email);
+            session()->put('firstname', $user->firstname);
+            session()->put('middlename', $user->middlename);
+            session()->put('lastname', $user->lastname);
+
+             session()->put('username', $user->username);
+        
         return $request->only(
             'email', 'password', 'password_confirmation', 'token'
         );
